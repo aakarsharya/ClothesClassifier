@@ -102,8 +102,7 @@ def train(X, Y, epochs):
 
 if __name__ == "__main__":
     initializeWeights(layerSizes)
-    train(Xtrain, YtrainOneHot, EPOCHS
-    )
+    train(Xtrain, YtrainOneHot, EPOCHS)
     storeWeights(L)
     plotTraining()
 
