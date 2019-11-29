@@ -11,17 +11,23 @@ pip install matplotlib
 ```
 
 ## Running Python Files
-To run the files in this repository, you must first navigate to this directory from your terminal.
-i.e.
+Ensure you have python version >= 3.5 by entering the following in your terminal.
 ```bash
-cd Desktop/ClothesClassifier
+python --version
 ```
-
+Clone the repository to your Desktop by entering the following commands.
+```bash
+cd ~/Desktop
+git clone https://github.com/aakarsharya/ClothesClassifier.git
+```
+To run the files in this repository, you must first navigate to this directory from your terminal.
+```bash
+cd ClothesClassifier
+```
 To watch the neural network train itself, run nn.py from your terminal with the following command.
 ```bash
 python nn.py
 ```
-
 To test the neural network's accuracy, run test.py from your terminal with the following command.
 ```bash
 python test.py
