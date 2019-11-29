@@ -27,8 +27,9 @@ To test the neural network's accuracy, run test.py from your terminal with the f
 python test.py
 ```
 
-# Training the Neural Network
+## How it Works
+### Training the Neural Network
 This program trains the neural network using thousands of clothes images, with labels that tell the network what article of clothing each image corresponds to. 
 
-# Testing the Neural Network
+### Testing the Neural Network
 This program allows you to test different images from a dataset that neural network has never seen before. The network uses its weights, that it has tuned by iterating through the training dataset, to classify these new images.
