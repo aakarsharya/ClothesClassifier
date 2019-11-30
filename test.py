@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from preprocess import Xtest, YtestOneHot
-from nn import loadWeights, testNeuralNetwork
+from train import loadWeights, testNeuralNetwork
 
 layerSizes = np.loadtxt('layerSizes.txt', dtype='int32')
 weights = loadWeights(len(layerSizes)-1, layerSizes)
