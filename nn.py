@@ -120,7 +120,7 @@ def inputLayerSizes(custom):
         print('You constructed a ' + network + ' network.')
     else:
         L = len(layerSizes)-1
-        print('You are training a ' + str(Xtrain.shape[0]) + ' -> 32 -> 16 -> ' + str(C) + ' network.')
+        print('You are training a ' + str(Xtrain.shape[0]) + ' -> 64 -> 32 -> 16 -> ' + str(C) + ' network.')
     return layerSizes, L
         
 if __name__ == "__main__":
