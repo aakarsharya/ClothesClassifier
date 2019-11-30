@@ -35,8 +35,17 @@ python test.py
 Remember to close the test image to allow the program to continue.
 
 ## How it Works
-### Training the Neural Network
+### Training the Neural Network (train.py)
 This program trains the neural network using thousands of clothes images, with labels that tell the network what article of clothing each image corresponds to. 
 
-### Testing the Neural Network
-This program allows you to test different images from a dataset that neural network has never seen before. The network uses its weights, that it has tuned by iterating through the training dataset, to classify these new images.
+### Testing the Neural Network (test.py)
+When you run test.py, you will be prompted to enter an index number. This corresponds to new images from a dataset that neural network has never seen before. However, the network uses its tuned weights, which have been trained using the training dataset, to make a prediction. 
+
+The program will display the test image corresponding to the index you entered, and output the prediction when you close the image. For example if you enter 1 when prompted for the index, you should see the following.
+<img src="images/testImage1.png">
+```bash
+The neural network thinks this is a T-shirt.
+Correct! This is a T-shirt.
+Try again? (y/n):
+```
+To end the program, enter 'n', try again with a new index enter 'y'.
