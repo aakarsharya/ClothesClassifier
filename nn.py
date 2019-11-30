@@ -4,27 +4,30 @@ from sklearn.metrics import classification_report, confusion_matrix
 from preprocess import *
 
 def sigmoid(Z):
-    A = 1/(1+np.exp(-Z))
+    with np.errstate(all='ignore'):
+        A = 1/(1+np.exp(-Z))
     return A
 
 def softmax(Z):
-    A = np.exp(Z) / np.sum(np.exp(Z), axis=0)
+    with np.errstate(all='ignore'):
+        A = np.exp(Z) / np.sum(np.exp(Z), axis=0)
     return A
 
 def sigmoidDerivative(dA, Z):
-    s = 1/(1+np.exp(-Z))
+    with np.errstate(all='ignore'):
+        s = 1/(1+np.exp(-Z))
     dZ = dA * s * (1-s) 
     return dZ
 
 def softmaxDerivative(Y, AL):
     return AL-Y
 
-def initializeWeights(layerSizes):
+def initializeWeights(L, layerSizes):
     for l in range(1,L+1):
         weights['W'+str(l)] = np.random.randn(layerSizes[l], layerSizes[l-1])
         weights['b'+str(l)] = np.zeros((layerSizes[l], 1))
 
-def forwardProp(X, activations, weights):
+def forwardProp(L, X, activations, weights):
     activations['A0'] = X
     for l in range(1,L):
         activations['Z'+str(l)] = np.dot(weights['W'+str(l)], activations['A'+str(l-1)]) + weights['b'+str(l)]
@@ -37,7 +40,7 @@ def computeCost(Y, AL):
     loss = np.sum(np.multiply(Y, np.log(AL)))
     return (-1/m) * loss
 
-def backProp(Y):
+def backProp(L, Y):
     gradients['dZ'+str(L)] = softmaxDerivative(Y, activations['A'+str(L)])
     gradients['dW'+str(L)] = (1/m) * np.dot(gradients['dZ'+str(L)], np.transpose(activations['A'+str(L-1)]))
     gradients['db'+str(L)] = (1/m) * np.sum(gradients['dZ'+str(L)], axis=1, keepdims=True)
@@ -71,11 +74,11 @@ def loadWeights(layers, layerSizes):
         loadedWeights['W'+str(l)].shape = (layerSizes[l], layerSizes[l-1])
         loadedWeights['b'+str(l)] = np.loadtxt('trainedWeights/bias'+str(l)+'.txt')
         loadedWeights['b'+str(l)].shape = (layerSizes[l], 1)
-    return loadedWeights
+    return loadedWeights    
 
-def testNeuralNetwork(X_test, Y_test, loadedWeights):
+def testNeuralNetwork(L, X_test, Y_test, loadedWeights):
     testActivations = {}
-    AL = forwardProp(X_test, testActivations, loadedWeights)
+    AL = forwardProp(L, X_test, testActivations, loadedWeights)
     predictions = np.argmax(AL, axis=0)
     labels = np.argmax(Y_test, axis=0)
     # display results
@@ -88,21 +91,45 @@ def testNeuralNetwork(X_test, Y_test, loadedWeights):
     print('------------------------------')
     return predictions, labels
 
-def train(X, Y, epochs):
+def train(L, X, Y, epochs):
     cost = 0
     for epoch in range(1, epochs):
-        forwardProp(X, activations, weights)
+        forwardProp(L, X, activations, weights)
         cost = computeCost(Y, activations['A'+str(L)])
-        backProp(Y)
+        backProp(L, Y)
         gradientDescent()
         if (epoch % 100 == 0):
             costs.append(cost)
             print("Epoch " + str(epoch) + ": cost " + str(cost))
     print("Final cost after training: " + str(cost))
 
+def inputLayerSizes(custom):
+    layerSizes = np.loadtxt('layerSizes.txt', dtype='int32')
+    if (custom == True):
+        network = str(Xtrain.shape[0]) + ' -> '
+        hiddenLayers = int(input('Enter number of hidden layers (excluding input and output layer): '))
+        layerSizes = np.zeros((hiddenLayers+2), dtype='int32')
+        layerSizes[0] = Xtrain.shape[0]
+        L = hiddenLayers+1 # number of hidden layers + output layer (excluding input layer)
+        for l in range(1,hiddenLayers+1):
+            layerSizes[l] = int(input('Enter size of hidden layer ' + str(l) + ': '))
+            network += str(layerSizes[l]) + ' -> '
+        layerSizes[L] = C
+        network += str(C)
+        np.savetxt('layerSizes.txt', layerSizes)
+        print('You constructed a ' + network + ' network.')
+    else:
+        L = len(layerSizes)-1
+        print('You are training a ' + str(Xtrain.shape[0]) + ' -> 32 -> 16 -> ' + str(C) + ' network.')
+    return layerSizes, L
+        
 if __name__ == "__main__":
-    initializeWeights(layerSizes)
-    train(Xtrain, YtrainOneHot, EPOCHS)
+    custom = input('Would you like to construct your own neural network? (y/n): ')
+    layerSizes, L = inputLayerSizes(custom == 'y')
+    print('training...')
+    initializeWeights(L, layerSizes)
+    train(L, Xtrain, YtrainOneHot, EPOCHS)
+    print('training complete.')
     storeWeights(L)
     plotTraining()
 

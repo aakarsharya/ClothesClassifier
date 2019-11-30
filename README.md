@@ -32,6 +32,7 @@ To test the neural network's accuracy, run test.py from your terminal with the f
 ```bash
 python test.py
 ```
+Remember to close the test image to allow the program to continue.
 
 ## How it Works
 ### Training the Neural Network
